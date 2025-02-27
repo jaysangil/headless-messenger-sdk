@@ -1,0 +1,117 @@
+{
+    "id": "c58d65bc-3b3c-4498-9f48-a67a6e798961",
+    "name": "webmess-headless-configuration",
+    "version": "DRAFT",
+    "headlessMode": {
+      "enabled": true
+    },
+    "description": "Test Headless config",
+    "languages": [
+      "ar",
+      "zh-cn",
+      "zh-tw",
+      "cs",
+      "da",
+      "nl",
+      "en-us",
+      "et",
+      "fi",
+      "fr",
+      "de",
+      "he",
+      "it",
+      "ja",
+      "ko",
+      "lv",
+      "lt",
+      "no",
+      "pl",
+      "pt-br",
+      "pt-pt",
+      "ru",
+      "es",
+      "sv",
+      "th",
+      "tr"
+    ],
+    "defaultLanguage": "en-us",
+    "customI18nLabels": [],
+    "messenger": {
+      "enabled": true,
+      "styles": {
+        "primaryColor": "#0D6EFD"
+      },
+      "launcherButton": {
+        "visibility": "On"
+      },
+      "fileUpload": {
+        "enableAttachments": true,
+        "modes": [
+          {
+            "fileTypes": [
+              "image/jpeg",
+              "image/gif",
+              "image/png"
+            ],
+            "maxFileSizeKB": 10240
+          }
+        ]
+      },
+      "apps": {
+        "conversations": {
+          "enabled": true,
+          "showAgentTypingIndicator": true,
+          "showUserTypingIndicator": true,
+          "autoStart": {
+            "enabled": false
+          },
+          "markdown": {
+            "enabled": true
+          },
+          "conversationDisconnect": {
+            "enabled": true,
+            "type": "ReadOnly"
+          },
+          "conversationClear": {
+            "enabled": true
+          },
+          "humanize": {
+            "enabled": false,
+            "bot": {
+              "name": "",
+              "avatarUrl": ""
+            }
+          }
+        }
+      },
+      "homeScreen": {
+        "enabled": false,
+        "logoUrl": ""
+      },
+      "sessionPersistenceType": "AcrossSubdomains"
+    },
+    "position": {
+      "alignment": "Left",
+      "sideSpace": 20,
+      "bottomSpace": 12
+    },
+    "cobrowse": {
+      "enabled": false,
+      "allowAgentControl": true,
+      "allowAgentNavigation": true,
+      "allowDraw": true,
+      "maskSelectors": [],
+      "channels": [],
+      "readonlySelectors": [],
+      "pauseCriteria": []
+    },
+    "journeyEvents": {
+      "enabled": false
+    },
+    "authenticationSettings": {
+      "enabled": false,
+      "integrationId": "",
+      "allowSessionUpgrade": false
+    },
+    "status": "Active"
+  }

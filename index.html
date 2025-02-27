@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Genesys Chat - Glassy Aquatic UI</title>
+  <!-- Genesys Messenger Snippet -->
+  <script type="text/javascript" charset="utf-8">
+    (function (g, e, n, es, ys) {
+      g['_genesysJs'] = e;
+      g[e] = g[e] || function () {
+          (g[e].q = g[e].q || []).push(arguments)
+      };
+      g[e].t = 1 * new Date();
+      g[e].c = es;
+      ys = document.createElement('script');
+      ys.async = 1;
+      ys.src = n;
+      ys.charset = 'utf-8';
+      document.head.appendChild(ys);
+    })(window, 'Genesys', 'https://apps.usw2.pure.cloud/genesys-bootstrap/genesys.min.js', {
+      environment: 'prod-usw2',
+      deploymentId: 'fbadeddd-a1ce-43d5-bc52-9798d1b72971'
+    });
+  </script>
+  <style>
+    /* 
+      Aquatic background with a gradient 
+      Feel free to change colors or angles to get a different vibe
+    */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #00aaff, #0055ff);
+    }
+
+    /*
+      Glassy Chat Wrapper
+      - Slight transparency
+      - Frosted glass effect using backdrop-filter
+    */
+    #chat-wrapper {
+      width: 350px;
+      max-width: 90%;
+      background: rgba(255, 255, 255, 0.1); 
+      backdrop-filter: blur(10px); 
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* 
+      Chat Header 
+      - Transparent with a subtle border bottom
+    */
+    #chat-header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+      font-size: 18px;
+      position: relative;
+    }
+    #chat-header .status {
+      font-size: 12px;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+    }
+
+    /*
+      Chat messages area
+      - Transparent
+    */
+    #chat-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Chat bubbles */
+    .message {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      max-width: 80%;
+      color: #fff; /* White text for better contrast on translucent backgrounds */
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    /* User (sent) messages with a bright aquatic gradient */
+    .message.sent {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      border-radius: 16px 16px 0 16px;
+    }
+
+    /* Agent (received) messages with a glassy bubble */
+    .message.received {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      border-radius: 16px 16px 16px 0;
+    }
+
+    /* The text inside each bubble */
+    .message p {
+      margin: 10px;
+      position: relative;
+    }
+
+    /* Timestamp styling (small and right-aligned) */
+    .message .timestamp {
+      font-size: 10px;
+      color: #eee;
+      text-align: right;
+      margin: 0 10px 5px;
+    }
+
+    /* Check mark icon for sent messages */
+    .status-icon {
+      float: right;
+      margin-left: 8px;
+      color: #fff;
+      opacity: 0.8;
+    }
+
+    /* Typing indicator styling */
+    #typing-indicator {
+      display: none;
+      padding: 5px 15px;
+      font-size: 12px;
+      color: #fff;
+      opacity: 0.8;
+    }
+
+    /*
+      Input area (footer)
+      - Another glassy effect
+    */
+    #chat-input-container {
+      display: flex;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    #message-input {
+      flex: 1;
+      border: none;
+      padding: 15px;
+      font-size: 16px;
+      color: #fff;
+      background: transparent;
+    }
+    #message-input::placeholder {
+      color: #ddd;
+    }
+    #message-input:focus {
+      outline: none;
+    }
+
+    /*
+      Send button
+      - Simple bright aquatic gradient
+    */
+    #send-btn {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      border: none;
+      color: #fff;
+      padding: 0 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #send-btn:hover {
+      background: linear-gradient(135deg, #00b0e8, #0069e8);
+    }
+
+    /*
+      Control buttons
+      - modern alignment with gap
+    */
+    .control-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 8px;
+      padding: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+    .control-buttons button {
+      padding: 8px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      transition: background 0.3s;
+    }
+    .control-buttons button:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-wrapper">
+    <div id="chat-header">
+      Genesys Headless Messenger
+      <div class="status" id="chat-status">Offline</div>
+    </div>
+    <div id="chat-messages"></div>
+    <div id="typing-indicator">Agent is typing...</div>
+    <div id="chat-input-container">
+      <input type="text" id="message-input" placeholder="Type your message here. . ." />
+      <button id="send-btn">Send</button>
+    </div>
+    <div class="control-buttons">
+      <button id="start-btn">Start Chat</button>
+      <button id="disc-btn">Disconnect</button>
+      <button id="clear-convo-btn">Clear Conversation</button>
+      <button id="del-btn">Clear Storage</button>
+      <button id="fetch-btn">History</button>
+    </div>
+  </div>
+
+  <script>
+    // Utility function to format timestamps (HH:MM)
+    function formatTimestamp(date) {
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
+
+    /**
+     * Add a message bubble to the chat window
+     * @param {string} message - The text to display
+     * @param {string} type - 'sent' or 'received'
+     * @param {Date} timestamp - Timestamp for the message
+     * @param {string} [messageId] - Unique ID for tracking the bubble (for check mark updates)
+     */
+    function addMessageToChat(message, type = 'received', timestamp = new Date(), messageId = null) {
+      const chatMessages = document.getElementById('chat-messages');
+      const messageElem = document.createElement('div');
+      messageElem.classList.add('message', type);
+
+      // Assign an ID so we can find/update this bubble later
+      if (messageId) {
+        messageElem.id = messageId;
+      }
+
+      // The main text container
+      const messageText = document.createElement('p');
+      messageText.textContent = message;
+      messageElem.appendChild(messageText);
+
+      // If this is a 'sent' message, add a small span for the check mark
+      if (type === 'sent') {
+        const statusIcon = document.createElement('span');
+        statusIcon.classList.add('status-icon');
+        // Placeholder content (empty until confirmed)
+        statusIcon.textContent = '';
+        messageText.appendChild(statusIcon);
+      }
+
+      // Timestamp
+      const timeElem = document.createElement('div');
+      timeElem.classList.add('timestamp');
+      timeElem.textContent = formatTimestamp(timestamp);
+      messageElem.appendChild(timeElem);
+
+      chatMessages.appendChild(messageElem);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Update connection status in header
+    function updateStatus(status) {
+      document.getElementById('chat-status').textContent = status;
+    }
+
+    // Genesys Messenger initialization and subscriptions
+    Genesys("registerPlugin", "Plugin", function(Plugin) {
+      Plugin.command("GenesysJS.configuration").then(data => {
+        console.log("Deployment configuration", data);
+      });
+    });
+
+    Genesys('subscribe', 'MessagingService.ready', () => {
+      console.log("MessagingService is ready!");
+      updateStatus("Online");
+    });
+
+    Genesys('subscribe', 'MessagingService.started', function({data}){
+      console.log("MessagingService.started", data);
+      updateStatus("Connected");
+    });
+
+    Genesys("subscribe", "MessagingService.reconnecting", function() {
+      console.log("Session reconnecting");
+      updateStatus("Reconnecting...");
+    });
+
+    Genesys("subscribe", "MessagingService.restored", function({ data }) {
+      console.log("MessagingService restored!", data);
+      data.messages.forEach(msg =>
+        addMessageToChat(msg.text, 'received', new Date(msg.timestamp || Date.now()))
+      );
+      updateStatus("Restored");
+    });
+
+    Genesys("subscribe", "MessagingService.reconnected", function() {
+      console.log("Session reconnected");
+      updateStatus("Connected");
+      Genesys("command", "MessagingService.fetchHistory", {},
+        function(data) {
+          console.log("Conversation History Fetched!", data);
+          data.messages.forEach(msg =>
+            addMessageToChat(msg.text, 'received', new Date(msg.timestamp || Date.now()))
+          );
+        },
+        function() {
+          console.log("Unable to fetch history.");
+        }
+      );
+    });
+
+    /**
+     * Handle incoming messages
+     * - Show typing indicator for "typing" messages
+     * - Only add messages with direction="Outbound" as "received" (agent → user)
+     */
+    Genesys("subscribe", "MessagingService.messagesReceived", function({ data }) {
+      console.log("messagesReceived data:", data.messages);
+      data.messages.forEach(msg => {
+        if (msg.type === 'typing') {
+          document.getElementById('typing-indicator').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('typing-indicator').style.display = 'none';
+          }, 2000);
+          return;
+        }
+        // Show only agent/bot messages
+        if (msg.direction === 'Outbound') {
+          addMessageToChat(
+            msg.text,
+            'received',
+            new Date(msg.timestamp || Date.now())
+          );
+        }
+      });
+    });
+
+    // Start chat conversation
+    function startChat(){
+      Genesys("command", "MessagingService.startConversation", {},
+        function() {
+          console.log("Conversation started! WebSocket initiated.");
+          updateStatus("Connected");
+        },
+        function() {
+          console.log("Error starting conversation.");
+          updateStatus("Error");
+        }
+      );
+    }
+
+    /**
+     * Send message
+     * 1) Immediately add the user's message to the chat (with a placeholder icon).
+     * 2) Send to Genesys. On success, update the placeholder to a check mark.
+     */
+    function sendMessage() {
+      const messageInput = document.getElementById('message-input');
+      const messageText = messageInput.value.trim();
+      if (messageText === '') return;
+
+      // Create a unique ID for this message bubble
+      const uniqueId = 'msg-' + Date.now();
+
+      // Immediately add the message to the UI
+      addMessageToChat(messageText, 'sent', new Date(), uniqueId);
+
+      // Send the message via Genesys
+      Genesys("command", "MessagingService.sendMessage", { message: messageText },
+        function() {
+          console.log("Message sent!");
+          // Find the bubble by ID and set the check mark
+          const bubble = document.getElementById(uniqueId);
+          if (bubble) {
+            const icon = bubble.querySelector('.status-icon');
+            if (icon) {
+              icon.textContent = '✔️'; // or any icon you like
+            }
+          }
+        },
+        function() {
+          console.log("Unable to send message!");
+        }
+      );
+
+      messageInput.value = '';
+    }
+
+    // Clear the session (disconnect)
+    function clearSession(){
+      Genesys("command", "MessagingService.clearSession", {},
+        function() {
+          console.log("Session has been cleared.");
+          updateStatus("Disconnected");
+        },
+        function() {
+          console.log("Error clearing session.");
+        }
+      );
+    }
+
+    // Clear the active conversation using ClearConversation command
+    function clearConversation(){
+      Genesys("command", "MessagingService.ClearConversation", {},
+        function() {
+          console.log("Conversation cleared successfully.");
+          // Optionally clear the chat window
+          document.getElementById('chat-messages').innerHTML = '';
+        },
+        function() {
+          console.log("Error clearing conversation.");
+        }
+      );
+    }
+
+    // Fetch conversation history
+    function fetchHistory(){
+      Genesys("command", "MessagingService.fetchHistory", {},
+        function(data) {
+          console.log("Conversation History Fetched!", data);
+          data.messages.forEach(msg =>
+            addMessageToChat(msg.text, 'received', new Date(msg.timestamp || Date.now()))
+          );
+        },
+        function() {
+          console.log("Unable to fetch history.");
+        }
+      );
+    }
+
+    // Remove specific local storage items
+    function removeLocalValues(){
+      localStorage.removeItem('_actmu');
+      localStorage.removeItem('_actms');
+      localStorage.removeItem('_actts');
+      localStorage.removeItem('_actvc');
+      console.log("Local storage cleared.");
+    }
+
+    // Event listeners
+    document.getElementById('send-btn').addEventListener('click', sendMessage);
+    document.getElementById('disc-btn').addEventListener('click', clearSession);
+    document.getElementById('clear-convo-btn').addEventListener('click', clearConversation);
+    document.getElementById('start-btn').addEventListener('click', startChat);
+    document.getElementById('fetch-btn').addEventListener('click', fetchHistory);
+    document.getElementById('del-btn').addEventListener('click', removeLocalValues);
+
+    // Send on Enter
+    document.getElementById('message-input').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>

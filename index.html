@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Genesys Chat - Glassy Aquatic UI</title>
+
   <!-- Genesys Messenger Snippet -->
   <script type="text/javascript" charset="utf-8">
     (function (g, e, n, es, ys) {
@@ -23,6 +24,7 @@
       deploymentId: 'fbadeddd-a1ce-43d5-bc52-9798d1b72971'
     });
   </script>
+
   <style>
     /* 
       Aquatic background with a gradient 
@@ -36,7 +38,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #00aaff, #0055ff);
+      background: linear-gradient(135deg, #1a73e8, #5eb1ff);
     }
 
     /*
@@ -62,20 +64,23 @@
       - Transparent with a subtle border bottom
     */
     #chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
       color: #fff;
       padding: 15px;
-      text-align: center;
       font-size: 18px;
-      position: relative;
+    }
+    #chat-header .title {
+      margin: 0;
+      font-weight: bold;
     }
     #chat-header .status {
-      font-size: 12px;
-      position: absolute;
-      right: 15px;
-      top: 15px;
+      font-size: 14px;
+      opacity: 0.9;
     }
 
     /*
@@ -102,14 +107,14 @@
 
     /* User (sent) messages with a bright aquatic gradient */
     .message.sent {
-      align-self: flex-end;
+      align-self: flex-end; 
       background: linear-gradient(135deg, #00c6ff, #0072ff);
       border-radius: 16px 16px 0 16px;
     }
 
     /* Agent (received) messages with a glassy bubble */
     .message.received {
-      align-self: flex-start;
+      align-self: flex-start; 
       background: rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10px);
@@ -136,6 +141,12 @@
       margin-left: 8px;
       color: #fff;
       opacity: 0.8;
+    }
+
+    /* Example green glow for "Online"/"Connected" status */
+    .status-online {
+      color: #0f0;
+      text-shadow: 0 0 6px #0f0;
     }
 
     /* Typing indicator styling */
@@ -191,18 +202,18 @@
 
     /*
       Control buttons
-      - modern alignment with gap
+      - using a grid layout for uniform alignment
     */
     .control-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       padding: 10px;
       border-top: 1px solid rgba(255, 255, 255, 0.2);
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
     }
+
     .control-buttons button {
       padding: 8px 12px;
       font-size: 12px;
@@ -212,31 +223,40 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
       border-radius: 8px;
       backdrop-filter: blur(10px);
-      transition: background 0.3s;
+      transition: all 0.3s;
     }
+
     .control-buttons button:hover {
       background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* hover glow effect */
+    .hover-glow:hover {
+      box-shadow: 0 0 8px 2px rgba(255,255,255,0.5);
+      background: rgba(255, 255, 255, 0.3);
     }
   </style>
 </head>
 <body>
   <div id="chat-wrapper">
     <div id="chat-header">
-      Genesys Headless Messenger
+      <div class="title">Genesys Headless Messenger</div>
       <div class="status" id="chat-status">Offline</div>
     </div>
     <div id="chat-messages"></div>
     <div id="typing-indicator">Agent is typing...</div>
+
     <div id="chat-input-container">
       <input type="text" id="message-input" placeholder="Type your message here. . ." />
       <button id="send-btn">Send</button>
     </div>
+
     <div class="control-buttons">
-      <button id="start-btn">Start Chat</button>
-      <button id="disc-btn">Disconnect</button>
-      <button id="clear-convo-btn">Clear Conversation</button>
-      <button id="del-btn">Clear Storage</button>
-      <button id="fetch-btn">History</button>
+      <button id="start-btn" class="hover-glow">Start Chat</button>
+      <button id="disc-btn" class="hover-glow">Disconnect</button>
+      <button id="clear-convo-btn" class="hover-glow">Clear Convo</button>
+      <button id="del-btn" class="hover-glow">Clear Storage</button>
+      <button id="fetch-btn" class="hover-glow">Fetch History</button>
     </div>
   </div>
 
@@ -291,7 +311,19 @@
 
     // Update connection status in header
     function updateStatus(status) {
-      document.getElementById('chat-status').textContent = status;
+      const statusElem = document.getElementById('chat-status');
+      statusElem.textContent = status;
+
+      // Remove old status classes
+      statusElem.classList.remove('status-online');
+      
+      // Normalize the string so it’s easier to compare
+      const normalized = status.toLowerCase();
+
+      // If it's "Online" or "Connected," use the green glow
+      if (normalized.includes('online') || normalized.includes('connected')) {
+        statusElem.classList.add('status-online');
+      } 
     }
 
     // Genesys Messenger initialization and subscriptions
@@ -341,9 +373,9 @@
     });
 
     /**
-     * Handle incoming messages
-     * - Show typing indicator for "typing" messages
-     * - Only add messages with direction="Outbound" as "received" (agent → user)
+     * Handle incoming messages:
+     *  - Show typing indicator for "typing" messages
+     *  - Only add messages with direction="Outbound" as 'received' (agent → user)
      */
     Genesys("subscribe", "MessagingService.messagesReceived", function({ data }) {
       console.log("messagesReceived data:", data.messages);
@@ -355,7 +387,7 @@
           }, 2000);
           return;
         }
-        // Show only agent/bot messages
+        // Show only agent/bot messages if direction === 'Outbound'
         if (msg.direction === 'Outbound') {
           addMessageToChat(
             msg.text,
@@ -381,7 +413,7 @@
     }
 
     /**
-     * Send message
+     * Send message:
      * 1) Immediately add the user's message to the chat (with a placeholder icon).
      * 2) Send to Genesys. On success, update the placeholder to a check mark.
      */
@@ -393,7 +425,7 @@
       // Create a unique ID for this message bubble
       const uniqueId = 'msg-' + Date.now();
 
-      // Immediately add the message to the UI
+      // Immediately add the message to the UI as "sent" (right side)
       addMessageToChat(messageText, 'sent', new Date(), uniqueId);
 
       // Send the message via Genesys

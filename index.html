@@ -369,7 +369,7 @@
     });
 
     // ============== NEW: Subscribe to "ended" to set "Disconnected" ==============
-    Genesys("subscribe", "MessagingService.ended", () => {
+    Genesys("subscribe", "MessagingService.conversationDisconnected", () => {
       console.log("Conversation ended by Genesys");
       updateStatus("Disconnected");
     });

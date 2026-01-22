@@ -248,6 +248,7 @@
       <button id="clear-convo-btn" class="hover-glow">Clear Convo</button>
       <button id="del-btn" class="hover-glow">Clear Storage</button>
       <button id="fetch-btn" class="hover-glow">Fetch History</button>
+      <button id="send-card-btn" class="hover-glow">Send Card</button>
     </div>
   </div>
 
@@ -439,6 +440,28 @@
       messageInput.value = '';
     }
 
+    /**
+     * Send a card message for testing
+     */
+    function sendCard() {
+      Genesys("command", "MessagingService.sendMessage", {
+        type: "card",
+        postback: {
+          text: "Click Me!",
+          payload: "Click Me!"
+        }
+      },
+        function() {
+          console.log("Card sent successfully!");
+          // Optionally add a visual confirmation in the chat
+          addMessageToChat("📇 Card sent: 'Click Me!'", 'sent', new Date());
+        },
+        function(error) {
+          console.log("Unable to send card!", error);
+        }
+      );
+    }
+
     // ============== NEW: Indicate user is typing using "MessagingService.sendTyping" ==============
     let typingTimer;
     function userIsTyping() {
@@ -511,6 +534,7 @@
     document.getElementById('start-btn').addEventListener('click', startChat);
     document.getElementById('fetch-btn').addEventListener('click', fetchHistory);
     document.getElementById('del-btn').addEventListener('click', removeLocalValues);
+    document.getElementById('send-card-btn').addEventListener('click', sendCard);
 
     // Send on Enter
     document.getElementById('message-input').addEventListener('keypress', function (e) {
